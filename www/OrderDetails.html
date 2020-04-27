@@ -1,0 +1,161 @@
+<!--
+  ~ Copyright 2019 Samer Diab emil: contact@samerdiab.net
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+
+    <meta charset=utf-8 />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.orange-indigo.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+
+
+
+
+    <script type="text/javascript">
+        function getDetails(order_id,uid){
+            var starCountRef = firebase.database().ref().child('orders/'+uid+'/'+order_id); // replace 1 with user uid
+
+            starCountRef.on('value', function(snapshot) {
+
+                if(snapshot.val() != null ){
+
+                    var name  = snapshot.child("name").val();
+                    var status = snapshot.child("status").val();
+                    var timestamp = snapshot.child("timestamp").val();
+                    var date = new Date(timestamp);
+
+                    document.getElementById('order_name').innerText = name;
+                    document.getElementById('created_at').innerText = date;
+                    if(status)
+                        document.getElementById('order_status').innerText = 'Order Complete';
+                    else
+                        document.getElementById('order_status').innerText = 'Order Pending';
+
+
+
+                }
+
+            });
+        }
+        function deleteOrder(order_id,uid){
+            firebase.database().ref().child('orders/'+uid+'/'+order_id).remove(); // replace 1 with user uid
+            window.location = 'HomeScreen.html';
+        }
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const order_id = urlParams.get('id');
+            var storage = window.localStorage;
+            var uid = storage.getItem('uid');
+
+
+
+            getDetails(order_id,uid);
+
+            document.addEventListener("backbutton", function(e){
+
+
+                e.preventDefault();
+               window.location = 'HomeScreen.html';
+
+            }, false);
+
+
+
+
+
+
+
+        };
+
+    </script>
+</head>
+<body>
+<div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
+
+    <!-- Header section containing title -->
+    <header class="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
+
+    </header>
+
+    <main class="mdl-layout__content mdl-color--grey-100">
+        <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+            <div style="display:inline; margin: auto;   ">
+            <div>
+            <label>Oder Name</label>
+            <p id="order_name">Order Name</p>
+            </div>
+            <div>
+                <label>Order status</label>
+                <p id="order_status">Order Status</p>
+            </div>
+                <div>
+                    <label>Created at</label>
+                    <p id="created_at">Created at</p>
+                </div>
+            </div>
+            <button id="delete-order">Delete Order</button>
+
+        </div>
+
+    </main>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/5.7.2/firebase.js"></script>
+<script>
+
+    var config = {
+        apiKey: "AIzaSyDTiKh6VvOqjV7Vjz7lSjL4TANzfEOAt0Q",
+        authDomain: "pristine-rock-91018.firebaseapp.com",
+        databaseURL: "https://pristine-rock-91018.firebaseio.com",
+        projectId: "pristine-rock-91018",
+        storageBucket: "pristine-rock-91018.appspot.com",
+        messagingSenderId: "782413632133"
+    };
+
+    firebase.initializeApp(config);
+
+</script>
+<script>
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const order_id = urlParams.get('id');
+
+    var storage = window.localStorage;
+    var uid = storage.getItem('uid');
+
+
+
+
+    var del = document.querySelector('#delete-order');
+
+   del.addEventListener('click', function() {
+    if(confirm('Delete Order?')){
+                deleteOrder(order_id,uid);
+    }
+    });
+
+</script>
+<script type="text/javascript" src="cordova.js"></script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!--
+  ~ Copyright 2019 Samer Diab emil: contact@samerdiab.net
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+
+    <meta charset=utf-8 />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Home</title>
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.orange-indigo.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+
+
+
+    <script type="text/javascript">function logOut() {
+        if(confirm('Logout?')){
+            var storage = window.localStorage;
+            firebase.auth().signOut();
+            storage.setItem('remember_me','false');
+            window.location = 'userportal.html';
+        }
+    }
+
+
+    function profile() {
+        window.location = 'Profile.html';
+    }
+
+    function newOrder() {
+            window.location = 'NewOrder.html';
+    }
+
+
+
+    </script>
+
+    <script type="text/javascript">
+
+
+        function initApp() {
+            var storage = window.localStorage;
+                var uid = storage.getItem('uid');
+
+
+            var starCountRef = firebase.database().ref().child('orders/'+uid);
+
+            starCountRef.on('value', function(snapshot) {
+                document.getElementById('new-order-button').disabled = false;
+                if(snapshot.val() != null ){
+                    $('#orders').empty();
+
+                   document.getElementById('card_view').style.visibility = "visible";
+
+                    document.getElementById('p1').style.visibility = "hidden";
+
+
+                    $('#p1').fadeOut(100,function () {
+                        $('#card_view').fadeIn(100);
+                    });
+
+                    document.getElementById('card_view').classList.add('mdl-card','mdl-shadow--2dp');
+
+
+                   snapshot.forEach(function (childFunction) {
+
+                       var item = document.createElement('li');
+                       var a = document.createElement('a');
+
+                       var textnode = document.createTextNode(childFunction.child('name').val());
+                        a.appendChild(textnode);
+                        a.href='OrderDetails.html?id='+childFunction.key;
+                        a.target ="_self";
+                       item.appendChild(a);
+
+                       document.getElementById('orders').appendChild(item);
+                       $('#orders').listview('refresh');
+
+
+                   });
+
+
+                }else{
+                    $('#p1').fadeOut(100,function () {
+                        document.getElementById('no_orders').classList.add('center');
+                        document.getElementById('no_orders').style.visibility = "visible";
+                        document.getElementById('no_orders').style = "visible";
+
+                    });
+                }
+            });
+
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+
+                    var emailVerified = user.emailVerified;
+                    if (!emailVerified) {
+                        //todo handle code
+                    }
+                } else {
+                    window.close();
+                }
+            });
+
+        }
+        window.onload = function() {
+
+
+
+
+            initApp();
+        };
+    </script>
+</head>
+<body>
+<div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
+
+    <!-- Header section containing title -->
+    <header class="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
+      <div style="margin:auto;">
+          <button id="new-order-button" onclick="newOrder()" disabled>
+            new order
+        </button>
+      </div>
+        <button id="demo-menu-lower-left"
+                class="mdl-button mdl-js-button mdl-button--icon">
+            <i class="material-icons">more_vert</i>
+        </button>
+
+        <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect"
+            for="demo-menu-lower-left">
+            <button id="logout" class="mdl-menu__item" onclick="logOut()">Logout</button>
+
+            <button id="profile" class="mdl-menu__item" onclick="profile()">Profile</button>
+
+        </ul>
+    </header>
+
+    <main class="mdl-layout__content mdl-color--grey-100">
+        <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+
+            <!-- Container for the demo -->
+            <p id="no_orders" style="visibility: hidden;">You have no orders!</p>
+            <div id="p1" class="mdl-progress mdl-js-progress mdl-progress__indeterminate" style="position:fixed;width:40%;top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+            <div  id="card_view" style="visibility:hidden; margin: auto; ">
+
+                <ul id="orders" data-role="listview" >
+
+                </ul>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script type="text/javascript" src="cordova.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.7.2/firebase.js"></script>
+<script>
+
+    var config = {
+        apiKey: "AIzaSyDTiKh6VvOqjV7Vjz7lSjL4TANzfEOAt0Q",
+        authDomain: "pristine-rock-91018.firebaseapp.com",
+        databaseURL: "https://pristine-rock-91018.firebaseio.com",
+        projectId: "pristine-rock-91018",
+        storageBucket: "pristine-rock-91018.appspot.com",
+        messagingSenderId: "782413632133"
+    };
+
+    firebase.initializeApp(config);
+
+    document.addEventListener("backbutton", function(e){
+        e.preventDefault();
+        navigator.app.exitApp();
+    }, false);
+</script>
+</body>
+</html>
