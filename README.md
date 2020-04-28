@@ -8,20 +8,22 @@
 <br>
 <img src="https://github.com/beastgetssavvy13/phonegap/blob/master/sample%20raw/2.JPG"/>
 </br>
-<h4>App Interface
+<h2>App Interface
 <img src="https://github.com/beastgetssavvy13/phonegap/blob/master/sample%20raw/1.JPG"/>
 </br>
+<h2>Order Input
 <img src="https://github.com/beastgetssavvy13/phonegap/blob/master/sample%20raw/6.JPG"/>
 </br>
 <br>
-<h4>Order Onsite
+<h2>Order Onsite
 <img src="https://github.com/beastgetssavvy13/phonegap/blob/master/sample%20raw/3.JPG"/>
 </br>
 <br>
-<h4>Sign In
+<h2>Sign In
 <img src="https://github.com/beastgetssavvy13/phonegap/blob/master/sample%20raw/4.JPG"/>
 </br>
 <br>
+<h2>
 <img src="https://github.com/beastgetssavvy13/phonegap/blob/master/sample%20raw/5.JPG"/>
 </br>
 
